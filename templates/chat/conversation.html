@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}گفتگو با {{ other.get_username }} | رها گیفت{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-page"
+     data-chat-kind="dm"
+     data-chat-user-id="{{ other.pk }}"
+     data-chat-username="{{ other.get_username }}"
+     data-messages-url="{% url 'chat:messages_api' other.pk %}"
+     data-ws-url="/ws/chat/{{ other.pk }}/"
+     data-upload-url="{% url 'chat:upload_api' %}"
+     data-mute-url="{% url 'chat:mute' other.pk %}"
+     data-media-url="/media/"
+     {% if other_online %}data-other-online="1"{% endif %}>
+    <div class="chat-panel chat-thread">
+        <header class="chat-panel-header chat-thread-header">
+            <a class="chat-back" href="{% url 'chat:inbox' %}">پیام‌ها</a>
+            <div class="chat-peer">
+                <span class="chat-avatar">{{ other.get_username|slice:":1"|upper }}</span>
+                <strong>{{ other.get_username }}</strong>
+            </div>
+            <span class="chat-status" data-chat-status>در حال اتصال…</span>
+            <button
+                type="button"
+                class="chat-tool chat-mute"
+                data-chat-mute
+                aria-pressed="{% if other_muted %}true{% else %}false{% endif %}"
+                title="{% if other_muted %}فعال کردن صدای این گفتگو{% else %}بی‌صدا کردن این گفتگو{% endif %}"
+                aria-label="{% if other_muted %}فعال کردن صدای این گفتگو{% else %}بی‌صدا کردن این گفتگو{% endif %}"
+            >{% if other_muted %}🔕{% else %}🔔{% endif %}</button>
+        </header>
+
+        <div class="chat-messages" data-chat-messages>
+            <div class="chat-loading" data-chat-loading>در حال بارگذاری پیام‌ها…</div>
+        </div>
+
+        <form class="chat-composer" data-chat-form autocomplete="off">
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value="{{ csrf_token }}"
+            >
+            <div class="chat-reply-bar" hidden data-reply-bar>
+                <span class="chat-reply-accent" aria-hidden="true"></span>
+                <span class="chat-reply-text">
+                    <strong class="chat-reply-name" data-reply-name></strong>
+                    <span class="chat-reply-preview" data-reply-preview></span>
+                </span>
+                <button
+                    type="button"
+                    class="chat-reply-cancel"
+                    data-reply-cancel
+                    aria-label="لغو پاسخ"
+                >✕</button>
+            </div>
+            <button
+                type="button"
+                class="chat-tool"
+                title="ارسال فایل"
+                aria-label="ارسال فایل"
+                data-chat-attach
+            >📎</button>
+            <button
+                type="button"
+                class="chat-tool"
+                title="ارسال ویس"
+                aria-label="ارسال ویس"
+                data-chat-voice
+            >🎙️</button>
+            <input
+                class="chat-input"
+                type="text"
+                name="body"
+                placeholder="نوشتن پیام…"
+                maxlength="2000"
+                data-chat-input
+            >
+            <button type="submit" class="btn btn-primary chat-send" data-chat-send>
+                ارسال
+            </button>
+            <input
+                type="file"
+                hidden
+                accept=".txt,.md,.csv,.log,.json,.rtf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.pdf,.zip,.rar,.7z,.mp3,.ogg,.m4a,.wav,.webm,.mp4"
+                data-chat-file
+            >
+            <span class="chat-note" hidden data-chat-note></span>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>window.CHAT_SELF_ID = {{ request.user.pk }};</script>
+    <script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

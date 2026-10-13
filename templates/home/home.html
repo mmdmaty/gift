@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}خانه | رها گیفت{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+    <section class="hero-card">
+        <p class="page-eyebrow">صفحه اصلی</p>
+        <h1>خوش آمدی{% if user.is_authenticated %}، {{ user.get_username }}{% endif %}</h1>
+        <p>
+            مجموعه شعرها، فایل‌های صوتی و حساب کاربری از همین‌جا در دسترس است.
+        </p>
+        <div class="quick-actions">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'poem' %}">مشاهده شعرها</a>
+                {% if user.is_staff %}
+                    <a class="btn btn-secondary" href="{% url 'admin:index' %}">ورود به ادمین</a>
+                {% endif %}
+            {% else %}
+                <a class="btn btn-primary" href="{% url 'login' %}">ورود به حساب</a>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if user.is_authenticated %}
+        <section class="panel-card">
+            <h3>حساب کاربری شما</h3>
+            <div class="info-list">
+                <div>
+                    <span>نام کاربری</span>
+                    <strong>{{ user.username }}</strong>
+                </div>
+                <div>
+                    <span>ایمیل</span>
+                    <strong>{{ user.email|default:"ثبت نشده" }}</strong>
+                </div>
+                <div>
+                    <span>وضعیت</span>
+                    <strong>{% if user.is_active %}فعال{% else %}غیرفعال{% endif %}</strong>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ساخت اکانت | رها گیفت{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="signup-stage">
+    <div class="signup-glow" aria-hidden="true"></div>
+
+    <div class="signup-card">
+        <aside class="signup-brand">
+            <div class="signup-brand-mark">رها گیفت</div>
+
+            <p class="signup-brand-copy">
+                به جمع هدیه‌گیرنده‌ها بپیوندید و خریدتان را سریع و مطمئن انجام دهید.
+            </p>
+
+            <ul class="signup-brand-list">
+                <li>سفارش سریع و پیگیری‌شده</li>
+                <li>پشتیبانی در هر گام خرید</li>
+                <li>اعتبار و امنیت حساب کاربری</li>
+            </ul>
+        </aside>
+
+        <div class="signup-form-panel">
+            {% if not registration_allowed %}
+                <h1>ساخت اکانت</h1>
+
+                <div class="signup-blocked">
+                    <div class="alert alert-warning">
+                        ساخت اکانت امکان پذیر نیست. با ادمین تماس بگیرید.
+                    </div>
+
+                    <p class="lead">اگر قبلاً اکانت دارید، می‌توانید وارد شوید.</p>
+
+                    <a class="btn btn-primary btn-block" href="{% url 'login' %}">ورود</a>
+                </div>
+            {% else %}
+                <h1>ساخت اکانت</h1>
+                <p class="lead">برای ساخت اکانت، اطلاعات خواسته‌شده را وارد کنید.</p>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-error">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <label class="field">
+                        <span>نام کاربری</span>
+                        <input
+                            type="text"
+                            name="username"
+                            value="{{ form.username.value|default:'' }}"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+                        {% if form.username.errors %}
+                            <span class="field-error">{{ form.username.errors|striptags }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="field">
+                        <span>رمز عبور</span>
+                        <input
+                            type="password"
+                            name="password1"
+                            autocomplete="new-password"
+                            required
+                        >
+                        {% if form.password1.errors %}
+                            <span class="field-error">{{ form.password1.errors|striptags }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="field">
+                        <span>تکرار رمز عبور</span>
+                        <input
+                            type="password"
+                            name="password2"
+                            autocomplete="new-password"
+                            required
+                        >
+                        {% if form.password2.errors %}
+                            <span class="field-error">{{ form.password2.errors|striptags }}</span>
+                        {% endif %}
+                    </label>
+
+                    <button type="submit" class="btn btn-primary btn-block">ساخت اکانت</button>
+                </form>
+
+                <p class="signup-alt">
+                    قبلاً اکانت دارید؟ <a href="{% url 'login' %}">ورود</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}مجموعه شعرها | رها گیفت{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+    <header class="page-header">
+        <p class="page-eyebrow">آرشیو</p>
+        <h1>مجموعه شعرها</h1>
+        <p>روی عنوان هر شعر بزن تا متن و فایل صوتی آن باز شود.</p>
+    </header>
+
+    <div class="poem-list">
+        {% for poem in poems %}
+            <section class="poem-card">
+                <button
+                    class="poem-title"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="poem-{{ poem.pk }}"
+                >
+                    <span>{{ poem.name }}</span>
+                    <span class="arrow" aria-hidden="true">▼</span>
+                </button>
+
+                <div class="poem-content" id="poem-{{ poem.pk }}" hidden>
+                    <div class="poem-text">{{ poem.text }}</div>
+
+                    <h3>صداهای شعر</h3>
+
+                    {% for item in poem.sounds.all %}
+                        <div class="audio-item">
+                            <div>فایل صوتی {{ forloop.counter }}</div>
+                            <audio controls preload="none">
+                                <source src="{{ item.sound.url }}">
+                                مرورگر شما از پخش صدا پشتیبانی نمی‌کند.
+                            </audio>
+                        </div>
+                    {% empty %}
+                        <p>برای این شعر فایل صوتی ثبت نشده است.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% empty %}
+            <div class="empty-state">
+                هنوز شعری ثبت نشده است.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

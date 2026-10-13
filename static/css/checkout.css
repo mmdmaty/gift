@@ -1,0 +1,973 @@
+/* =========================================
+   Checkout Page
+========================================= */
+
+.checkout-container {
+
+    width: min(
+        1180px,
+        calc(100% - 40px)
+    );
+
+    margin: 35px auto 80px;
+
+}
+
+
+/* =========================================
+   Header
+========================================= */
+
+.checkout-header {
+
+    text-align: center;
+
+    margin-bottom: 40px;
+
+}
+
+
+.checkout-header h1 {
+
+    margin: 0 0 10px;
+
+    color: var(--text);
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+}
+
+
+.checkout-header p {
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================
+   Loading
+========================================= */
+
+.checkout-loading {
+
+    min-height: 250px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================
+   Empty
+========================================= */
+
+.checkout-empty {
+
+    min-height: 350px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 50px 20px;
+
+    border-radius: 24px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+}
+
+
+.checkout-empty h2 {
+
+    margin: 0 0 10px;
+
+    color: var(--text);
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+}
+
+
+.checkout-empty p {
+
+    margin: 0 0 25px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+.go-shopping-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 48px;
+
+    padding: 0 28px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #6d8cff
+        );
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 10px 25px
+        rgba(99, 102, 241, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.go-shopping-button:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 15px 30px
+        rgba(99, 102, 241, 0.30);
+
+}
+
+
+/* =========================================
+   Checkout Content
+========================================= */
+
+.checkout-content {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        380px;
+
+    gap: 30px;
+
+}
+
+
+/* =========================================
+   Sections
+========================================= */
+
+.checkout-section {
+
+    margin-bottom: 28px;
+
+}
+
+
+.section-title {
+
+    margin: 0 0 18px;
+
+    padding-bottom: 12px;
+
+    border-bottom:
+        2px solid
+        var(--border);
+
+    color: var(--text);
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+}
+
+
+/* =========================================
+   Discount Card
+========================================= */
+
+.discount-card {
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 4px 12px
+        rgba(15, 23, 42, 0.06);
+
+}
+
+
+.discount-input-group {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+
+.discount-input {
+
+    flex: 1;
+
+    min-height: 48px;
+
+    padding: 0 16px;
+
+    border:
+        1.5px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background: var(--background);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.discount-input:focus {
+
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(99, 102, 241, 0.10);
+
+}
+
+
+.apply-discount-button {
+
+    min-height: 48px;
+
+    padding: 0 24px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #6d8cff
+        );
+
+    color: #fff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    box-shadow:
+        0 8px 18px
+        rgba(99, 102, 241, 0.20);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.apply-discount-button:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 24px
+        rgba(99, 102, 241, 0.28);
+
+}
+
+
+.apply-discount-button:disabled {
+
+    cursor: default;
+
+    opacity: 0.6;
+
+    transform: none;
+
+}
+
+
+/* =========================================
+   Discount Feedback
+========================================= */
+
+.discount-feedback {
+
+    margin-top: 14px;
+
+    padding: 12px 16px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+}
+
+
+.discount-feedback.success {
+
+    background:
+        rgba(22, 163, 74, 0.10);
+
+    color: #16a34a;
+
+}
+
+
+.discount-feedback.error {
+
+    background:
+        rgba(239, 68, 68, 0.10);
+
+    color: #dc2626;
+
+}
+
+
+/* =========================================
+   Payment Methods
+========================================= */
+
+.payment-methods {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+}
+
+
+.payment-loading {
+
+    padding: 40px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    border-radius: 18px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+}
+
+
+.payment-method {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background: var(--surface);
+
+    border:
+        2px solid
+        var(--border);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.payment-method:hover {
+
+    border-color:
+        rgba(99, 102, 241, 0.30);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 6px 16px
+        rgba(99, 102, 241, 0.10);
+
+}
+
+
+.payment-method.selected {
+
+    border-color: var(--primary);
+
+    background:
+        rgba(99, 102, 241, 0.05);
+
+    box-shadow:
+        0 8px 20px
+        rgba(99, 102, 241, 0.15);
+
+}
+
+
+.payment-radio {
+
+    width: 22px;
+    height: 22px;
+
+    flex-shrink: 0;
+
+    border:
+        2px solid
+        var(--border);
+
+    border-radius: 50%;
+
+    background: var(--background);
+
+    position: relative;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+
+}
+
+
+.payment-method.selected .payment-radio {
+
+    border-color: var(--primary);
+
+    background: var(--primary);
+
+}
+
+
+.payment-method.selected .payment-radio::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #fff;
+
+}
+
+
+.payment-info {
+
+    flex: 1;
+
+}
+
+
+.payment-name {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--text);
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+}
+
+
+.payment-description {
+
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   Checkout Sidebar
+========================================= */
+
+.checkout-sidebar {
+
+    position: sticky;
+
+    top: 95px;
+
+    align-self: start;
+
+}
+
+
+.summary-card {
+
+    padding: 28px;
+
+    border-radius: 20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 12px 30px
+        rgba(15, 23, 42, 0.10);
+
+}
+
+
+.summary-card h3 {
+
+    margin: 0 0 22px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        2px solid
+        var(--border);
+
+    color: var(--text);
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+}
+
+
+.summary-items {
+
+    margin-bottom: 25px;
+
+}
+
+
+.summary-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+}
+
+
+.summary-row strong {
+
+    color: var(--text);
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+}
+
+
+.discount-row .discount-value {
+
+    color: #16a34a;
+
+}
+
+
+.summary-divider {
+
+    height: 1px;
+
+    margin: 18px 0;
+
+    background:
+        var(--border);
+
+}
+
+
+.total-row {
+
+    font-size: 14px;
+
+}
+
+
+.total-row .total-price {
+
+    color: var(--primary);
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+}
+
+
+/* =========================================
+   Submit Button
+========================================= */
+
+.submit-order-button {
+
+    width: 100%;
+
+    min-height: 52px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #6d8cff
+        );
+
+    color: #fff;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px
+        rgba(99, 102, 241, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+
+}
+
+
+.submit-order-button:hover:not(:disabled) {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 15px 30px
+        rgba(99, 102, 241, 0.30);
+
+}
+
+
+.submit-order-button:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.5;
+
+}
+
+
+/* =========================================
+   Order Feedback
+========================================= */
+
+.order-feedback {
+
+    margin-top: 16px;
+
+    padding: 12px 16px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+}
+
+
+.order-feedback.success {
+
+    background:
+        rgba(22, 163, 74, 0.10);
+
+    color: #16a34a;
+
+}
+
+
+.order-feedback.error {
+
+    background:
+        rgba(239, 68, 68, 0.10);
+
+    color: #dc2626;
+
+}
+
+
+/* =========================================
+   Dark Mode
+========================================= */
+
+html.dark .checkout-empty,
+html.dark .discount-card,
+html.dark .payment-method,
+html.dark .summary-card,
+html.dark .payment-loading {
+
+    background: #1a2236;
+
+    border-color: #283548;
+
+}
+
+
+html.dark .payment-method:hover {
+
+    border-color: #4f6bff;
+
+    box-shadow:
+        0 6px 16px
+        rgba(79, 107, 255, 0.10);
+
+}
+
+
+html.dark .payment-method.selected {
+
+    border-color: #818cf8;
+
+    background:
+        rgba(129, 140, 248, 0.08);
+
+    box-shadow:
+        0 8px 20px
+        rgba(129, 140, 248, 0.15);
+
+}
+
+
+html.dark .payment-radio {
+
+    border-color: #283548;
+
+    background: #111827;
+
+}
+
+
+html.dark .discount-input {
+
+    border-color: #283548;
+
+    background: #111827;
+
+}
+
+
+html.dark .discount-input:focus {
+
+    border-color: #818cf8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(129, 140, 248, 0.10);
+
+}
+
+
+html.dark .discount-feedback.success {
+
+    background:
+        rgba(22, 163, 74, 0.12);
+
+}
+
+
+html.dark .discount-feedback.error {
+
+    background:
+        rgba(239, 68, 68, 0.12);
+
+}
+
+
+html.dark .order-feedback.success {
+
+    background:
+        rgba(22, 163, 74, 0.12);
+
+}
+
+
+html.dark .order-feedback.error {
+
+    background:
+        rgba(239, 68, 68, 0.12);
+
+}
+
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width: 1000px) {
+
+    .checkout-content {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .checkout-sidebar {
+
+        position: static;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .checkout-container {
+
+        width:
+            calc(100% - 28px);
+
+        margin-top: 20px;
+
+    }
+
+
+    .checkout-header h1 {
+
+        font-size: 26px;
+
+    }
+
+
+    .discount-input-group {
+
+        flex-direction: column;
+
+    }
+
+
+    .apply-discount-button {
+
+        width: 100%;
+
+    }
+
+}

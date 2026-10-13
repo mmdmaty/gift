@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ورود به حساب | رها گیفت{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="signup-stage">
+    <div class="signup-glow" aria-hidden="true"></div>
+
+    <div class="signup-card">
+        <aside class="signup-brand">
+            <div class="signup-brand-mark">رها گیفت</div>
+
+            <p class="signup-brand-copy">
+                خوش آمدید! برای ادامه‌ی خرید، پیگیری سفارش‌ها و گفتگو با پشتیبانی وارد شوید.
+            </p>
+
+            <ul class="signup-brand-list">
+                <li>سفارش سریع و پیگیری‌شده</li>
+                <li>پشتیبانی در هر گام خرید</li>
+                <li>تاریخچه‌ی خرید و گفتگوها</li>
+            </ul>
+        </aside>
+
+        <div class="signup-form-panel">
+            <h1>ورود به حساب</h1>
+            <p class="lead">برای ادامه، نام کاربری و رمز عبور را وارد کنید.</p>
+
+            {% if locked_minutes %}
+                <div class="alert alert-warning">
+                    به دلیل تلاش‌های ناموفق زیاد، ورود شما موقتاً مسدود شده است.
+                    {{ locked_minutes }} دقیقه‌ی دیگر دوباره تلاش کنید.
+                </div>
+            {% else %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-error">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if failed_attempts %}
+                    <div class="alert alert-warning">
+                        {{ failed_attempts }} از {{ max_attempts }} تلاش ناموفق —
+                        {{ attempts_left }} تلاش دیگر باقی مانده است.
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label class="field">
+                    <span>نام کاربری</span>
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ form.username.value|default:'' }}"
+                        autocomplete="username"
+                        required
+                        autofocus
+                    >
+                    {% if form.username.errors %}
+                        <span class="field-error">{{ form.username.errors|striptags }}</span>
+                    {% endif %}
+                </label>
+
+                <label class="field">
+                    <span>رمز عبور</span>
+                    <input
+                        type="password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                    >
+                    {% if form.password.errors %}
+                        <span class="field-error">{{ form.password.errors|striptags }}</span>
+                    {% endif %}
+                </label>
+
+                <button type="submit" class="btn btn-primary btn-block">ورود</button>
+            </form>
+
+            <p class="signup-alt">
+                حساب ندارید؟ <a href="{% url 'signup' %}">ثبت‌نام</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

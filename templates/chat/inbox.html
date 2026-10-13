@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}پیام‌ها | رها گیفت{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-page chat-inbox-page">
+    <div class="chat-panel chat-inbox">
+        <header class="chat-panel-header chat-inbox-head">
+            <div class="chat-inbox-title">
+                <h1>پیام‌ها</h1>
+                <p>گفتگوی خصوصی و گروهی با کاربران رها گیفت</p>
+            </div>
+            <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                data-open-new-group
+            >＋ گروه جدید</button>
+        </header>
+
+        {% if form_error %}
+            <div class="alert alert-error chat-inbox-alert">{{ form_error }}</div>
+        {% endif %}
+
+        <div class="chat-toolbar">
+            <input
+                class="chat-search"
+                type="search"
+                placeholder="جست‌وجوی نام کاربری…"
+                aria-label="جست‌وجوی نام کاربری"
+                data-inbox-search
+            >
+            <div class="chat-tabs" role="tablist">
+                <button type="button" class="chat-tab is-active" data-tab="all">همه</button>
+                <button type="button" class="chat-tab" data-tab="dm">گفتگوها</button>
+                <button type="button" class="chat-tab" data-tab="group">گروه‌ها</button>
+            </div>
+        </div>
+
+        <section class="chat-section" data-section="group">
+            <h2 class="chat-section-title">گروه‌ها</h2>
+            {% if groups %}
+                <ul class="chat-user-list">
+                    {% for item in groups %}
+                        <li
+                            class="chat-row"
+                            data-chat-row
+                            data-kind="group"
+                            data-id="{{ item.group.pk }}"
+                            data-name="{{ item.group.name }}"
+                            data-admin="{% if item.is_admin %}1{% else %}0{% endif %}"
+                            data-muted="{% if item.muted %}1{% else %}0{% endif %}"
+                            data-mute-url="{% url 'chat:group_mute' item.group.pk %}"
+                            data-delete-url="{% url 'chat:group_delete' item.group.pk %}"
+                            data-leave-url="{% url 'chat:group_leave' item.group.pk %}"
+                        >
+                            <a
+                                class="chat-user-row"
+                                href="{% url 'chat:group_conversation' item.group.pk %}"
+                            >
+                                <span class="chat-avatar">{{ item.group.name|slice:":1"|upper }}</span>
+                                <span class="chat-user-meta">
+                                    <strong>
+                                        {{ item.group.name }}
+                                        {% if item.is_admin %}<span class="chat-admin-star" title="مدیر گروه">★</span>{% endif %}
+                                    </strong>
+                                    {% if item.last_body %}
+                                        <small class="chat-preview">{{ item.last_body|truncatechars:60 }}</small>
+                                    {% else %}
+                                        <small class="chat-preview">{{ item.member_count }} عضو</small>
+                                    {% endif %}
+                                </span>
+                                {% if item.muted %}<span class="chat-mute-flag" title="بی‌صدا">🔕</span>{% endif %}
+                                {% if item.last_at %}
+                                    <time class="chat-time" datetime="{{ item.last_at|date:'c' }}">{{ item.last_at|date:"H:i" }}</time>
+                                {% endif %}
+                                {% if item.unread %}
+                                    <span class="chat-unread-badge">{{ item.unread }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="chat-section-empty">هنوز گروهی نساخته‌اید.</p>
+            {% endif %}
+        </section>
+
+        <section class="chat-section" data-section="dm">
+            <h2 class="chat-section-title">گفتگوها</h2>
+            {% if users %}
+                <ul class="chat-user-list">
+                    {% for item in users %}
+                        <li
+                            class="chat-row"
+                            data-chat-row
+                            data-kind="dm"
+                            data-id="{{ item.user.pk }}"
+                            data-name="{{ item.user.get_username }}"
+                            data-muted="{% if item.muted %}1{% else %}0{% endif %}"
+                            data-mute-url="{% url 'chat:mute' item.user.pk %}"
+                            data-delete-url="{% url 'chat:conversation_delete' item.user.pk %}"
+                        >
+                            <a
+                                class="chat-user-row"
+                                href="{% url 'chat:conversation' item.user.pk %}"
+                            >
+                                <span class="chat-avatar">{{ item.user.get_username|slice:":1"|upper }}</span>
+                                <span class="chat-user-meta">
+                                    <strong>{{ item.user.get_username }}</strong>
+                                    {% if item.last_body %}
+                                        <small class="chat-preview">{{ item.last_body|truncatechars:60 }}</small>
+                                    {% else %}
+                                        <small class="chat-preview">شروع گفتگو</small>
+                                    {% endif %}
+                                </span>
+                                {% if item.muted %}<span class="chat-mute-flag" title="بی‌صدا">🔕</span>{% endif %}
+                                {% if item.last_at %}
+                                    <time class="chat-time" datetime="{{ item.last_at|date:'c' }}">{{ item.last_at|date:"H:i" }}</time>
+                                {% endif %}
+                                {% if item.unread %}
+                                    <span class="chat-unread-badge">{{ item.unread }}</span>
+                                {% endif %}
+                                <span class="chat-dot {% if item.online %}is-online{% endif %}" title="{% if item.online %}آنلاین{% else %}آفلاین{% endif %}"></span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="chat-section-empty">فعلاً کاربر دیگری برای گفتگو وجود ندارد.</p>
+            {% endif %}
+        </section>
+
+        <div class="empty-state chat-inbox-empty" data-inbox-empty hidden>
+            کاربری با این نام پیدا نشد.
+        </div>
+    </div>
+
+    <div class="chat-modal" hidden data-new-group-modal>
+        <div class="chat-modal-backdrop" data-modal-close></div>
+        <form
+            class="chat-modal-card"
+            method="post"
+            action="{% url 'chat:group_create' %}"
+            data-new-group-form
+        >
+            {% csrf_token %}
+            <header class="chat-modal-head">
+                <h2>گروه جدید</h2>
+                <p>نام گروه را بنویسید و اعضا را انتخاب کنید.</p>
+            </header>
+
+            <label class="field">
+                <span>نام گروه</span>
+                <input type="text" name="name" maxlength="100" required autofocus>
+            </label>
+
+            <fieldset class="chat-member-picker">
+                <legend>اعضا</legend>
+                {% if new_group_users %}
+                    {% for u in new_group_users %}
+                        <label class="checkbox-field">
+                            <input type="checkbox" name="members" value="{{ u.pk }}">
+                            <span>{{ u.get_username }}</span>
+                        </label>
+                    {% endfor %}
+                {% else %}
+                    <p class="chat-section-empty">کاربر دیگری ثبت‌نام نکرده است.</p>
+                {% endif %}
+            </fieldset>
+
+            <div class="chat-modal-actions">
+                <button type="button" class="btn btn-ghost" data-modal-close>انصراف</button>
+                <button type="submit" class="btn btn-primary">ساخت گروه</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/chat-inbox.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}گروه {{ group.name }} | رها گیفت{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-page"
+     data-chat-kind="group"
+     data-chat-group-id="{{ group.pk }}"
+     data-chat-username="{{ group.name }}"
+     data-messages-url="{% url 'chat:group_messages_api' group.pk %}"
+     data-ws-url="/ws/chat/group/{{ group.pk }}/"
+     data-upload-url="{% url 'chat:upload_api' %}"
+     data-mute-url="{% url 'chat:group_mute' group.pk %}"
+     data-leave-url="{% url 'chat:group_leave' group.pk %}"
+     data-delete-url="{% url 'chat:group_delete' group.pk %}"
+     data-members-url="{% url 'chat:group_members' group.pk %}"
+     data-media-url="/media/"
+     {% if is_admin %}data-group-admin="1"{% endif %}>
+    <div class="chat-panel chat-thread">
+        <header class="chat-panel-header chat-thread-header">
+            <a class="chat-back" href="{% url 'chat:inbox' %}">پیام‌ها</a>
+            <div class="chat-peer">
+                <span class="chat-avatar">{{ group.name|slice:":1"|upper }}</span>
+                <span class="chat-peer-text">
+                    <strong>{{ group.name }}</strong>
+                    <small>{{ member_count }} عضو</small>
+                </span>
+            </div>
+            <span class="chat-status" data-chat-status>{{ member_count }} عضو</span>
+            <button
+                type="button"
+                class="chat-tool chat-members"
+                data-open-members
+                title="اعضای گروه"
+                aria-label="اعضای گروه"
+            >👥</button>
+            <button
+                type="button"
+                class="chat-tool chat-mute"
+                data-chat-mute
+                aria-pressed="{% if group_muted %}true{% else %}false{% endif %}"
+                title="{% if group_muted %}فعال کردن صدای این گروه{% else %}بی‌صدا کردن این گروه{% endif %}"
+                aria-label="{% if group_muted %}فعال کردن صدای این گروه{% else %}بی‌صدا کردن این گروه{% endif %}"
+            >{% if group_muted %}🔕{% else %}🔔{% endif %}</button>
+        </header>
+
+        <div class="chat-messages" data-chat-messages>
+            <div class="chat-loading" data-chat-loading>در حال بارگذاری پیام‌ها…</div>
+        </div>
+
+        <form class="chat-composer" data-chat-form autocomplete="off">
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value="{{ csrf_token }}"
+            >
+            <div class="chat-reply-bar" hidden data-reply-bar>
+                <span class="chat-reply-accent" aria-hidden="true"></span>
+                <span class="chat-reply-text">
+                    <strong class="chat-reply-name" data-reply-name></strong>
+                    <span class="chat-reply-preview" data-reply-preview></span>
+                </span>
+                <button
+                    type="button"
+                    class="chat-reply-cancel"
+                    data-reply-cancel
+                    aria-label="لغو پاسخ"
+                >✕</button>
+            </div>
+            <button
+                type="button"
+                class="chat-tool"
+                title="ارسال فایل"
+                aria-label="ارسال فایل"
+                data-chat-attach
+            >📎</button>
+            <button
+                type="button"
+                class="chat-tool"
+                title="ارسال ویس"
+                aria-label="ارسال ویس"
+                data-chat-voice
+            >🎙️</button>
+            <input
+                class="chat-input"
+                type="text"
+                name="body"
+                placeholder="نوشتن پیام در گروه…"
+                maxlength="2000"
+                data-chat-input
+            >
+            <button type="submit" class="btn btn-primary chat-send" data-chat-send>
+                ارسال
+            </button>
+            <input
+                type="file"
+                hidden
+                accept=".txt,.md,.csv,.log,.json,.rtf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.gif,.webp,.pdf,.zip,.rar,.7z,.mp3,.ogg,.m4a,.wav,.webm,.mp4"
+                data-chat-file
+            >
+            <span class="chat-note" hidden data-chat-note></span>
+        </form>
+    </div>
+
+    <div class="chat-modal" hidden data-members-modal>
+        <div class="chat-modal-backdrop" data-modal-close></div>
+        <div class="chat-modal-card">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <header class="chat-modal-head">
+                <h2>اعضای گروه</h2>
+                <p>{{ member_count }} عضو</p>
+            </header>
+
+            <ul class="chat-member-list">
+                {% for row in members %}
+                    <li class="chat-member" data-member-id="{{ row.membership.user_id }}">
+                        <span class="chat-avatar">{{ row.membership.user.get_username|slice:":1"|upper }}</span>
+                        <span class="chat-member-name">
+                            {{ row.membership.user.get_username }}
+                            {% if row.membership.is_admin %}<span class="chat-admin-star" title="مدیر گروه">★</span>{% endif %}
+                            {% if row.is_me %}<small class="chat-member-me">شما</small>{% endif %}
+                        </span>
+                        {% if is_admin and not row.is_me %}
+                            <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                data-remove-member="{{ row.membership.user_id }}"
+                            >حذف</button>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            {% if is_admin %}
+                <form class="chat-add-members" data-add-members-form>
+                    <fieldset class="chat-member-picker">
+                        <legend>افزودن عضو</legend>
+                        {% if addable_users %}
+                            {% for u in addable_users %}
+                                <label class="checkbox-field">
+                                    <input type="checkbox" name="members" value="{{ u.pk }}">
+                                    <span>{{ u.get_username }}</span>
+                                </label>
+                            {% endfor %}
+                        {% else %}
+                            <p class="chat-section-empty">کاربر دیگری برای افزودن نیست.</p>
+                        {% endif %}
+                    </fieldset>
+                    <div class="chat-modal-actions">
+                        <button type="button" class="btn btn-ghost" data-modal-close>بستن</button>
+                        <button type="submit" class="btn btn-primary">افزودن اعضا</button>
+                    </div>
+                </form>
+                <div class="chat-modal-actions">
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        data-delete-group
+                        data-url="{% url 'chat:group_delete' group.pk %}"
+                    >حذف گروه</button>
+                </div>
+            {% else %}
+                <div class="chat-modal-actions">
+                    <button type="button" class="btn btn-ghost" data-modal-close>بستن</button>
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        data-leave-group
+                        data-url="{% url 'chat:group_leave' group.pk %}"
+                    >ترک گروه</button>
+                </div>
+            {% endif %}
+
+            <p class="chat-modal-note" data-members-note hidden></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>window.CHAT_SELF_ID = {{ request.user.pk }};</script>
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script src="{% static 'js/chat-group.js' %}"></script>
+{% endblock %}
