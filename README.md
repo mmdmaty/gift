@@ -169,3 +169,4 @@ config/                تنظیمات، آدرس‌ها و ASGI
 templates/  static/    قالب‌ها و فایل‌های استاتیک
 deploy/                install.sh و منوی gift
 ```
+"# gift" 
