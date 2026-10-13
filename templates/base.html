@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}رها گیفت{% endblock %}</title>
+    <title>{% block title %} گیفت{% endblock %}</title>
     <script>
         if (localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
@@ -17,7 +17,7 @@
 <body>
     <header class="navbar">
         <div class="navbar-container">
-            <a class="brand" href="{% url 'home' %}">رها گیفت</a>
+            <a class="brand" href="{% url 'home' %}"> گیفت</a>
 
             <nav class="nav-links">
                 <a href="{% url 'home' %}">خانه</a>
@@ -67,7 +67,7 @@
     </main>
 
     <footer class="site-footer">
-        تمامی حقوق برای رها گیفت محفوظ است.
+        تمامی حقوق برای  گیفت محفوظ است.
     </footer>
 
     <script src="{% static 'js/raha.js' %}"></script>
